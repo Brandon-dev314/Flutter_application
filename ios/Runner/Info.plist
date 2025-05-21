@@ -15,10 +15,6 @@
 	<key>CFBundleName</key>
 	<string>flutter_application_1</string>
 	<key>CFBundlePackageType</key>
-        <key>NSAppTransportSecurity</key>
-        <dict>
-         <key>NSAllowsArbitraryLoads</key><true/>
-        </dict>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
@@ -49,5 +45,32 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<!-- Permitir cargas arbitrarias si necesitas http -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key><true/>
+	</dict>
+
+	<!-- URL schemes para Google Sign-In -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.429432190208-fq74clqjnlfi2cnocjo3isb1ve056a4c</string>
+			</array>
+		</dict>
+	</array>
+
+	<!-- Opcional: esquemas para consultas a Google -->
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>com.googleusercontent.apps.429432190208-fq74clqjnlfi2cnocjo3isb1ve056a4c</string>
+		<string>com.google.chrome.ios</string>
+		<string>googlechrome</string>
+	</array>
 </dict>
 </plist>
