@@ -2,12 +2,13 @@ workflows:
   ios_testflight:
     name: iOS TestFlight
     max_build_duration: 60
+
     environment:
       flutter: stable
       xcode: latest
       cocoapods: default
 
-     scripts:
+    scripts:
       - name: Get Flutter packages
         script: flutter pub get
 
@@ -19,8 +20,7 @@ workflows:
 
       - name: Build IPA for TestFlight
         script: |
-          flutter build ipa \
-            --export-options-plist=ios/ExportOptions.plist
-            
+          flutter build ipa --export-options-plist=ios/ExportOptions.plist
+
     artifacts:
       - build/ios/ipa/*.ipa
