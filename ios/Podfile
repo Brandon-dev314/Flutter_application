@@ -1,18 +1,17 @@
-platform :ios, '18.0'
+platform :ios, '18.5'
 
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
-# Localiza la instalación de Flutter y configura el entorno
+# Localiza la ruta de Flutter SDK
 def flutter_root
-  # Ajuste para la ruta correcta de Generated.xcconfig
-  generated_xcode_build_settings_path = File.expand_path('Flutter/Generated.xcconfig', __dir__)
-  unless File.exist?(generated_xcode_build_settings_path)
-    raise "#{generated_xcode_build_settings_path} not found. Make sure flutter pub get has been run."
+  root = ENV['FLUTTER_ROOT']
+  if root.nil? || root.empty?
+    raise 'FLUTTER_ROOT environment variable must be set.'
   end
-  File.dirname(File.dirname(generated_xcode_build_settings_path))
+  root
 end
 
-# Carga los helpers de Flutter para CocoaPods
+# Carga los helpers de CocoaPods de Flutter
 require File.join(flutter_root, 'packages', 'flutter_tools', 'bin', 'podhelper')
 
 flutter_ios_podfile_setup
@@ -22,7 +21,7 @@ target 'Runner' do
   use_modular_headers!
 
   # Instala todos los pods de los plugins de Flutter
-  flutter_install_all_ios_pods(flutter_root)
+  install_all_flutter_pods
 end
 
 post_install do |installer|
