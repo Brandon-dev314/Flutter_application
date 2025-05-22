@@ -1,0 +1,40 @@
+workflows:
+  ios_testflight:
+    name: iOS TestFlight
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      vars:
+        # tus variables de entorno ya configuradas en la UI quedan aquí
+        # sino, déjalo vacío y usa la UI de Environment variables
+    scripts:
+      - name: Get Flutter packages
+        script: |
+          flutter pub get
+
+      - name: Install iOS pods
+        script: |
+          cd ios
+          pod install
+          cd ..
+
+      - name: Build IPA
+        script: |
+          flutter build ipa \
+            --export-options-plist=ios/ExportOptions.plist \
+            --release
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_API_KEY
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        key_id: $APP_STORE_CONNECT_KEY_ID
+        notify_testers: true
+        # si prefieres enviar luego desde la UI, pon notify_testers: false
+        fastlane:
+          skip_waiting_for_build_processing: true
