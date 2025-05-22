@@ -18,9 +18,11 @@ workflows:
           pod install
           cd ..
 
-      - name: Build IPA for TestFlight
+      - name: Build unsigned IPA
         script: |
-          flutter build ipa --export-options-plist=ios/ExportOptions.plist
+          flutter build ipa \
+            --export-options-plist=ios/ExportOptions.plist \
+            --no-codesign
 
     artifacts:
       - build/ios/ipa/*.ipa
