@@ -1,33 +1,30 @@
-# Uncomment this line to define a global platform for your project
-platform :ios, '18.5'
+platform :ios, '18.0'
 
-# Prevent CocoaPods from disabling concurrent input/output
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
-# The flutter_root method locates your Flutter installation
+# Localiza la instalación de Flutter y configura el entorno
 def flutter_root
-  generated_xcode_build_settings_path = File.expand_path('Generated.xcconfig', __dir__)
+  # Ajuste para la ruta correcta de Generated.xcconfig
+  generated_xcode_build_settings_path = File.expand_path('Flutter/Generated.xcconfig', __dir__)
   unless File.exist?(generated_xcode_build_settings_path)
     raise "#{generated_xcode_build_settings_path} not found. Make sure flutter pub get has been run."
   end
   File.dirname(File.dirname(generated_xcode_build_settings_path))
 end
 
-# Carga el helper de Flutter que define flutter_install_all_ios_pods, etc.
+# Carga los helpers de Flutter para CocoaPods
 require File.join(flutter_root, 'packages', 'flutter_tools', 'bin', 'podhelper')
 
-# Configura cualquier cosa previa a la instalación de pods
 flutter_ios_podfile_setup
 
 target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
-  # Esto instala TODOS los pods de tus plugins de Flutter
+  # Instala todos los pods de los plugins de Flutter
   flutter_install_all_ios_pods(flutter_root)
 end
 
-# Aplica ajustes post‐instalación para que todo compile bien
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
