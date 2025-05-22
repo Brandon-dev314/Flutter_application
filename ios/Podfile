@@ -1,7 +1,29 @@
-platform :ios, '18.5'
-use_frameworks!
-use_modular_headers!
+platform :ios, '16.0'
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+# 1) Detecta tu SDK de Flutter desde la variable de entorno
+def flutter_root
+  ENV['FLUTTER_ROOT'] || raise("FLUTTER_ROOT no encontrado")
+end
+
+# 2) Carga el helper que define flutter_install_all_ios_pods, flutter_post_install, etc.
+require File.expand_path(
+  File.join(flutter_root, 'packages', 'flutter_tools', 'bin', 'podhelper'),
+  __FILE__
+)
+
+# 3) Hook de configuración estándar
+flutter_ios_podfile_setup
 
 target 'Runner' do
-  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  use_frameworks!
+  use_modular_headers!
+
+  # 4) Aquí sí llamas al método que instala tus pods de Flutter
+  flutter_install_all_ios_pods(__dir__)
+end
+
+# 5) Ajustes post-install que Flutter recomienda
+post_install do |installer|
+  flutter_post_install(installer)
 end
