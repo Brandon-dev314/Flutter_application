@@ -1,29 +1,7 @@
-# ios/Podfile
-
-platform :ios, '18.0'
-ENV['COCOAPODS_DISABLE_STATS'] = 'true'
-
-# 1) apunta al SDK de Flutter que ya está en PATH / FLUTTER_ROOT
-def flutter_root
-  ENV['FLUTTER_ROOT'] || raise("FLUTTER_ROOT no encontrado")
-end
-
-# 2) carga el podhelper desde el SDK
-require File.expand_path(
-  File.join(flutter_root, 'packages', 'flutter_tools', 'bin', 'podhelper'),
-  __FILE__
-)
-
-flutter_ios_podfile_setup
+platform :ios, '18.5'
+use_frameworks!
+use_modular_headers!
 
 target 'Runner' do
-  use_frameworks!
-  use_modular_headers!
-
-  # instala todos los pods de tus plugins Flutter
-  flutter_install_all_ios_pods(__dir__)
-end
-
-post_install do |installer|
-  flutter_post_install(installer)
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
