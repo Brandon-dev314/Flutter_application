@@ -7,7 +7,7 @@ workflows:
       xcode: latest
       cocoapods: default
 
-    scripts:
+     scripts:
       - name: Get Flutter packages
         script: flutter pub get
 
@@ -20,8 +20,7 @@ workflows:
       - name: Build IPA for TestFlight
         script: |
           flutter build ipa \
-            --export-options-plist=ios/ExportOptions.plist \
-            --release
-
+            --export-options-plist=ios/ExportOptions.plist
+            
     artifacts:
       - build/ios/ipa/*.ipa
