@@ -29,7 +29,7 @@ workflows:
           cd ..
 
       - name: Build iOS
-        script: flutter build ios --release
+        script: flutter build ios --release --export-options-plist=ios/ExportOptions.plist
 
     artifacts:
       - build/ios/iphoneos/*.ipa
