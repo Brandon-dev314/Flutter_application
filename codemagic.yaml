@@ -28,9 +28,9 @@ workflows:
             rm -rf Pods Podfile.lock
             pod install --verbose
             cd ..
-
-     - name: Setup code signing on Xcode project
-       script: |
+            
+      - name: Setup code signing on Xcode project
+        script: |
           cd ios
           # Aplica solo a tu workspace Runner.xcworkspace
           xcode-project use-profiles --workspace Runner.xcworkspace
