@@ -29,8 +29,12 @@ workflows:
             pod install --verbose
             cd ..
 
-      - name: Setup code signing on Xcode project
-        script: xcode-project use-profiles
+     - name: Setup code signing on Xcode project
+       script: |
+          cd ios
+          # Aplica solo a tu workspace Runner.xcworkspace
+          xcode-project use-profiles --workspace Runner.xcworkspace
+          cd ..
 
       - name: Build iOS
         script: flutter build ios --release
