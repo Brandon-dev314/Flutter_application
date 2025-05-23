@@ -19,6 +19,9 @@ workflows:
       - name: Precache iOS artifacts
         script: flutter precache --ios
 
+      - script: keychain initialize
+      - script: keychain add-certificates
+
       - name: Install Flutter dependencies
         script: flutter pub get
 
@@ -32,7 +35,7 @@ workflows:
         script: xcode-project use-profiles
 
       - name: Build iOS
-        script: flutter build ios --release --export-options-plist=ios/ExportOptions.plist
+        script: flutter build ios --export-options-plist=ios/ExportOptions.plist
 
     artifacts:
       - build/ios/iphoneos/*.ipa
