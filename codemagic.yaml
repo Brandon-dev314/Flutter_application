@@ -44,9 +44,6 @@ workflows:
 
     publishing:
       app_store_connect:
-        ipa_path: build/ios/iphoneos/Runner.ipa
         api_key: $APP_STORE_CONNECT_API_KEY_BASE64
         key_id: $APP_STORE_CONNECT_KEY_ID
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-        notify_testers: true
-        testflight_preview: true
