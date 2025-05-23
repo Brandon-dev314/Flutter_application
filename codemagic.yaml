@@ -23,7 +23,7 @@ workflows:
       - script: keychain add-certificates
 
        - name: Setup code signing on Xcode project
-        script: xcode-project use-profiles
+          script: xcode-project use-profiles
 
       - name: Install Flutter dependencies
         script: flutter pub get
