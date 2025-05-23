@@ -28,6 +28,9 @@ workflows:
           pod install --verbose
           cd ..
 
+      - name: Setup code signing on Xcode project
+        script: xcode-project use-profiles
+
       - name: Build iOS
         script: flutter build ios --release --export-options-plist=ios/ExportOptions.plist
 
@@ -36,6 +39,6 @@ workflows:
 
     publishing:
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_API_KEY_BASE64       # proviene de ios-secrets
-        key_id: $APP_STORE_CONNECT_KEY_ID     # idem
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID    # idem
+        api_key: $APP_STORE_CONNECT_API_KEY_BASE64
+        key_id: $APP_STORE_CONNECT_KEY_ID
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
