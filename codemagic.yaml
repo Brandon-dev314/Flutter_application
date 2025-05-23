@@ -27,7 +27,6 @@ workflows:
 
     publishing:
       app_store_connect:
-        ipa_path: build/ios/iphoneos/Runner.ipa
         api_key_id: MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgxpGNRv5y/ycevAQyCFJkzfZSKtKprivKD6Yve2HhCnugCgYIKoZIzj0DAQehRANCAARTrvGRsSOxehxNY+F8gBbNBhEF6fFcmhjtKcRdAbguvxM10yBBQa0SnOpyVDlhNcykx3Z8mjvMI6k9EgeyUG4i
         issuer_id: 1f303ca7-90dc-4286-979c-3c38368b8065
         key_id: THHTNRG4UV
