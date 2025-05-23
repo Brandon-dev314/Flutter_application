@@ -9,7 +9,7 @@ workflows:
 
       # Importa tu grupo de variables aquí:
       groups:
-        - ios-secrets
+        - ios-secret
 
     scripts:
       - name: Precache iOS artifacts
