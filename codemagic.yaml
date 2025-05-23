@@ -1,30 +1,29 @@
 workflows:
   ios-workflow:
-    name: Build & Publish iOS to TestFlight
+    name: Build & Publish iOS
     max_build_duration: 60
 
     environment:
       flutter: stable
       xcode: latest
 
+      # Tu grupo con secretos (API Key TestFlight, etc.)
       groups:
         - ios-secret
 
+      # Firma automática usando los archivos que subiste en Code Signing → iOS signing
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.example.AppGisela
 
     scripts:
-      - name: Clean
-        script: flutter clean
-
-      - name: Precache Flutter iOS
+      - name: Precache Flutter iOS artifacts
         script: flutter precache --ios
 
-      - name: Flutter pub get
+      - name: Install Flutter dependencies
         script: flutter pub get
 
-      - name: Install iOS dependencies
+      - name: Install CocoaPods dependencies
         script: |
           cd ios
           rm -rf Pods Podfile.lock
@@ -34,36 +33,16 @@ workflows:
       - name: Apply provisioning profiles
         script: |
           cd ios
-          xcode-project use-profiles --workspace Runner.xcworkspace
+          # Aplica solo al proyecto Runner, no al de Pods:
+          xcode-project use-profiles --project Runner.xcodeproj
           cd ..
 
-      - name: Build unsigned Xcode project
+      - name: Build IPA
         script: |
-          cd ios
-          flutter build ios --release --no-codesign
-          cd ..
-
-      - name: Archive with xcodebuild
-        script: |
-          cd ios
-          xcodebuild archive 
-            -workspace Runner.xcworkspace 
-            -scheme Runner 
-            -configuration Release 
-            -archivePath $CM_BUILD_DIR/build/Runner.xcarchive 
-            DEVELOPMENT_TEAM=2AAUNCPR94 
-            CODE_SIGN_STYLE=Manual 
-            PROVISIONING_PROFILE_SPECIFIER="AppStore_Profile_ComExampleAppGisela"
-          cd ..
-
-      - name: Export IPA
-        script: |
-          cd ios
-          xcodebuild -exportArchive 
-            -archivePath $CM_BUILD_DIR/build/Runner.xcarchive 
-            -exportOptionsPlist ExportOptions.plist 
-            -exportPath $CM_BUILD_DIR/build/ios/ipa
-          cd ..
+          # Este comando genera el .ipa ya firmado
+          flutter build ipa 
+            --export-options-plist=ios/ExportOptions.plist 
+            --release
 
     artifacts:
       - build/ios/ipa/*.ipa
