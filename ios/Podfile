@@ -4,14 +4,18 @@ install! 'cocoapods', warn_for_unused_master_specs_repo: false
 project 'Runner', 'Debug' => :debug, 'Profile' => :release, 'Release' => :release
 
 def flutter_root
-  ENV['CM_FLUTTER_ROOT'] || ENV['FLUTTER_ROOT'] || raise("CM_FLUTTER_ROOT/FLUTTER_ROOT no definido")
+  # En CI: CM_FLUTTER_ROOT, en local: FLUTTER_ROOT
+  ENV['CM_FLUTTER_ROOT'] || ENV['FLUTTER_ROOT'] ||
+    raise("CM_FLUTTER_ROOT/FLUTTER_ROOT no definido")
 end
 
+# Carga el helper de Flutter que define flutter_install_all_ios_pods y flutter_post_install
 require File.expand_path(
   File.join(flutter_root, 'packages', 'flutter_tools', 'bin', 'podhelper'),
   __FILE__
 )
 
+# Hook inicial (se deja por compatibilidad)
 flutter_ios_podfile_setup
 
 target 'Runner' do
