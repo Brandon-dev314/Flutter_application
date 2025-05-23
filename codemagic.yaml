@@ -1,46 +1,49 @@
 workflows:
   ios-workflow:
-    name: Build & Publish iOS to TestFlight
+    name: Build & Publish iOS
     max_build_duration: 60
 
     environment:
       flutter: stable
       xcode: latest
+
+      # Grupo con tus secretos (certificado, perfil, API Key TestFlight…)
       groups:
         - ios-secret
+
+      # Firma automática con los archivos subidos en UI → Code signing
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.example.AppGisela
 
     scripts:
-      - name: Clean previous builds
+      - name: Clean
         script: flutter clean
-        
-      - name: Precache Flutter iOS artifacts
+
+      - name: Precache Flutter iOS
         script: flutter precache --ios
 
-      - name: Install Flutter dependencies
+      - name: Flutter pub get
         script: flutter pub get
 
       - name: Install iOS dependencies
         script: |
-            cd ios
-            rm -rf Pods Podfile.lock
-            pod install --verbose
-            cd ..
-            
-      - name: Setup code signing on Xcode project
+          cd ios
+          rm -rf Pods Podfile.lock
+          pod install --repo-update --verbose
+          cd ..
+
+      - name: Apply provisioning profiles
         script: |
           cd ios
-          # Aplica solo a tu workspace Runner.xcworkspace
           xcode-project use-profiles --workspace Runner.xcworkspace
           cd ..
 
-      - name: Build iOS
-        script: flutter build ios --release
+      - name: Build IPA
+        script: flutter build ipa --export-options-plist=ios/ExportOptions.plist
 
     artifacts:
-      - build/ios/iphoneos/*.ipa
+      - build/ios/ipa/*.ipa
 
     publishing:
       app_store_connect:
