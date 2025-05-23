@@ -22,9 +22,6 @@ workflows:
       - script: keychain initialize
       - script: keychain add-certificates
 
-       - name: Setup code signing on Xcode project
-          script: xcode-project use-profiles
-
       - name: Install Flutter dependencies
         script: flutter pub get
 
@@ -33,6 +30,9 @@ workflows:
           cd ios
           pod install --verbose
           cd ..
+      
+       - name: Setup code signing on Xcode project
+          script: xcode-project use-profiles
 
       - name: Build iOS
         script: flutter build ios --release
