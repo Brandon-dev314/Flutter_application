@@ -7,43 +7,50 @@ workflows:
       flutter: stable
       xcode: latest
 
-      # Importa tu grupo de variables aquí:
+      # 1) Asegura que FLUTTER_ROOT apunte al SDK de Flutter en el agente
+      variables:
+        FLUTTER_ROOT: $CM_FLUTTER_ROOT
+
+      # 2) Importa tu grupo de variables secretes (API keys, etc.)
       groups:
         - ios-secret
-        
+
+      # 3) Configuración de firma automática usando archivos subidos en la UI
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.example.AppGisela
 
     scripts:
-      - name: Precache iOS artifacts
+      # 4) Descarga los artifacts iOS del engine de Flutter
+      - name: Precache Flutter iOS artifacts
         script: flutter precache --ios
 
-      - script: keychain initialize
-      - script: keychain add-certificates
-
+      # 5) Recupera las dependencias Dart/Flutter
       - name: Install Flutter dependencies
         script: flutter pub get
 
+      # 6) Instala los pods de iOS (incluye Flutter.framework y plugins)
       - name: Install iOS dependencies
         script: |
           cd ios
           pod install --verbose
           cd ..
 
+      # 7) Aplica el provisioning profile y certificado al proyecto Xcode
       - name: Setup code signing on Xcode project
-        script: |
-          # Aplica el certificado y perfil al proyecto Xcode
-          xcode-project use-profiles
+        script: xcode-project use-profiles
 
+      # 8) Compila la app para dispositivo físico
       - name: Build iOS
-        script: flutter build ios --release 
+        script: flutter build ios \
+          --release \
+          --export-options-plist=ios/ExportOptions.plist
 
     artifacts:
       - build/ios/iphoneos/*.ipa
 
     publishing:
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_API_KEY_BASE64
-        key_id: $APP_STORE_CONNECT_KEY_ID
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        api_key:    $APP_STORE_CONNECT_API_KEY_BASE64
+        key_id:     $APP_STORE_CONNECT_KEY_ID
+        issuer_id:  $APP_STORE_CONNECT_ISSUER_ID
