@@ -27,9 +27,10 @@ workflows:
 
     publishing:
       app_store_connect:
-        api_key_id: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR1RBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEJIa3dkd0lCQVFRZ3hwR05SdjV5L3ljZXZBUXkKQ0ZKa3pmWlNLdEtwcml2S0Q2WXZlMkhoQ251Z0NnWUlLb1pJemowREFRZWhSQU5DQUFSVHJ2R1JzU094ZWh4TgpZK0Y4Z0JiTkJoRUY2ZkZjbWhqdEtjUmRBYmd1dnhNMTB5QkJRYTBTbk9weVZEbGhOY3lreDNaOG1qdk1JNms5CkVnZXlVRzRpCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0=
-        issuer_id: 1f303ca7-90dc-4286-979c-3c38368b8065
-        key_id: THHTNRG4UV
+        ipa_path: build/ios/iphoneos/Runner.ipa   # <-- IPA generado
+        api_key: $APP_STORE_CONNECT_API_KEY       # <-- Tu .p8 en base64
+        api_key_id: $APP_STORE_CONNECT_KEY_ID     # <-- Key identifier (p.ej. "THHTNRG4UV")
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID   # <-- Issuer ID
         notify_testers: true
         testflight_preview: true
         release_notes: |
