@@ -1,4 +1,4 @@
-# 1) Define la ruta al SDK de Flutter
+# 1) Define dónde está tu SDK de Flutter
 def flutter_root
   ENV['FLUTTER_ROOT'] || raise("FLUTTER_ROOT no encontrado")
 end
@@ -9,10 +9,10 @@ require File.expand_path(
   __FILE__
 )
 
-# 3) Hook de configuración estándar de Flutter
+# 3) Hook inicial de Flutter
 flutter_ios_podfile_setup
 
-# 4) Ya puedes declarar tu plataforma y target
+# 4) Ahora tu configuración habitual
 platform :ios, '13.0'
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
@@ -20,11 +20,19 @@ target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
-  # Aquí instalas los pods de tus plugins
+  # Instala todos los pods de tus plugins Flutter
   flutter_install_all_ios_pods(__dir__)
 end
 
-# 5) Y por último el post_install
+# 5) Aquí ya existe flutter_post_install
 post_install do |installer|
+  # (Opcional) Forzar deployment target en cada pod:
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+    end
+  end
+
+  # El hook estándar de Flutter
   flutter_post_install(installer)
 end
