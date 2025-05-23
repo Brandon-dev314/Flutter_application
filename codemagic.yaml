@@ -6,15 +6,8 @@ workflows:
     environment:
       flutter: stable
       xcode: latest
-
-      # Importa tu grupo de variables aquí:
       groups:
         - ios-secret
-
-      # Define vars de entorno con el nombre correcto
-      environment_variables:
-        FLUTTER_ROOT: $CM_FLUTTER_ROOT
-
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.example.AppGisela
