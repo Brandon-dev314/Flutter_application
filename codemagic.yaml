@@ -1,8 +1,11 @@
 workflows:
   ios-workflow:
-    name: Build for iOS
+    name: Build & Publish iOS to TestFlight
+    max_build_duration: 60
     environment:
       flutter: stable
+      xcode: latest
+
     scripts:
       - name: Precache iOS artifacts
         script: flutter precache --ios
@@ -17,9 +20,39 @@ workflows:
           cd ..
 
       - name: Build iOS
-        script: flutter build ios --release
+        script: flutter build ios --release --no-codesign
 
-    cache:
-      cache_paths:
-        - ~/.pub-cache
-        - ~/.gradle/caches
+    # Firma automática con el certificado y perfil ya configurados en la UI
+    signing:
+      ios:
+        distribution_method: app-store
+        developer_team: 2AAUNCPR94   # tu Team ID en Apple
+        # Si subiste tu cert + profile en UI, no necesitas más aquí
+
+    artifacts:
+      - build/ios/iphoneos/*.ipa
+
+    publishing:
+      app_store_connect:
+        # Apunta al IPA generado
+        ipa_path: build/ios/iphoneos/Runner.ipa
+        # Referencia a la API Key que subiste en Codemagic (ref name)
+        api_key_id: $YOUR_API_KEY_ID
+        issuer_id: $YOUR_ISSUER_ID
+        key_id: $YOUR_KEY_ID
+        # ===========================
+        # Ahora las opciones de TestFlight
+        # ===========================
+        # Distribuir sólo a testers internos:
+        notify_testers: true
+        testflight_preview: true      # para internal testing sin revisión
+        # Si quieres mandarlo a revisión beta (externos):
+        # submit_for_review: true
+        # groups:                     # si tienes grupos externos
+        #   - "Beta Testers"
+        #   - "QA Team"
+        # ===========================
+        # Notas de la versión (opcional)
+        release_notes: |
+          • Se corrigieron bugs menores  
+          • Mejoras de rendimiento  
