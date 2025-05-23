@@ -35,4 +35,3 @@ workflows:
         api_key: $APP_STORE_CONNECT_API_KEY_BASE64       # proviene de ios-secrets
         key_id: $APP_STORE_CONNECT_KEY_ID     # idem
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID    # idem
-        testflight_preview: true
