@@ -1,31 +1,43 @@
-# Plataforma mínima para evitar warnings de CocoaPods
+# 1) Plataforma y desactivar stats
 platform :ios, '13.0'
-
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+# 2) Para silenciar el warning de specs repo vacío
+install! 'cocoapods', warn_for_unused_master_specs_repo: false
+
+# 3) Proyecto Runner
 project 'Runner', 'Debug' => :debug, 'Profile' => :release, 'Release' => :release
 
-# Función para obtener FLUTTER_ROOT del Generated.xcconfig
+# 4) Detecta SDK de Flutter en CI o local
 def flutter_root
-  # Primero intenta CM_FLUTTER_ROOT (que Codemagic define automáticamente),
-  # luego FLUTTER_ROOT (para tu máquina local), y si no lanza error.
   ENV['CM_FLUTTER_ROOT'] ||
     ENV['FLUTTER_ROOT'] ||
-    raise("Neither CM_FLUTTER_ROOT nor FLUTTER_ROOT is set – asegúrate de tener Flutter instalado")
+    raise("Neither CM_FLUTTER_ROOT nor FLUTTER_ROOT is set – ensure Flutter SDK path is defined")
 end
-require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root())
+
+# 5) Carga el podhelper correcto desde el SDK
+require File.expand_path(
+  File.join(flutter_root, 'packages', 'flutter_tools', 'bin', 'podhelper'),
+  __FILE__
+)
+
+# 6) Hook inicial de Flutter
 flutter_ios_podfile_setup
 
+# 7) Target Runner
 target 'Runner' do
   use_frameworks!
   use_modular_headers!
+
   flutter_install_all_ios_pods(File.dirname(File.realpath(__FILE__)))
 end
 
-# Si tienes otros targets de app (ej. tests, App Clips, etc.), añádelos aquí e instala también los pods Flutter si corresponde:
-# target 'RunnerTests' do
-#   inherit! :search_paths
-# end
-
+# 8) post_install con el método definido
 post_install do |installer|
-  flutter_post_install(installer) if defined?(flutter_post_install)
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+    end
+  end
+  flutter_post_install(installer)
 end
