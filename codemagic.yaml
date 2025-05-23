@@ -7,40 +7,34 @@ workflows:
       flutter: stable
       xcode: latest
 
-      # 1) Asegura que FLUTTER_ROOT apunte al SDK de Flutter en el agente
-      variables:
-        FLUTTER_ROOT: $CM_FLUTTER_ROOT
-
-      # 2) Importa tu grupo de variables secretes (API keys, etc.)
+      # Importa tu grupo de variables aquí:
       groups:
         - ios-secret
 
-      # 3) Configuración de firma automática usando archivos subidos en la UI
+      # Define vars de entorno con el nombre correcto
+      environment_variables:
+        FLUTTER_ROOT: $CM_FLUTTER_ROOT
+
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.example.AppGisela
 
     scripts:
-      # 4) Descarga los artifacts iOS del engine de Flutter
       - name: Precache Flutter iOS artifacts
         script: flutter precache --ios
 
-      # 5) Recupera las dependencias Dart/Flutter
       - name: Install Flutter dependencies
         script: flutter pub get
 
-      # 6) Instala los pods de iOS (incluye Flutter.framework y plugins)
       - name: Install iOS dependencies
         script: |
           cd ios
           pod install --verbose
           cd ..
 
-      # 7) Aplica el provisioning profile y certificado al proyecto Xcode
       - name: Setup code signing on Xcode project
         script: xcode-project use-profiles
 
-      # 8) Compila la app para dispositivo físico
       - name: Build iOS
         script: flutter build ios \
           --release \
