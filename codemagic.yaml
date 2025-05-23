@@ -2,9 +2,14 @@ workflows:
   ios-workflow:
     name: Build & Publish iOS to TestFlight
     max_build_duration: 60
+
     environment:
       flutter: stable
       xcode: latest
+
+      # Importa tu grupo de variables aquí:
+      groups:
+        - ios-secrets
 
     scripts:
       - name: Precache iOS artifacts
@@ -27,12 +32,9 @@ workflows:
 
     publishing:
       app_store_connect:
-        ipa_path: build/ios/iphoneos/Runner.ipa   # <-- IPA generado
-        api_key: $APP_STORE_CONNECT_API_KEY       # <-- Tu .p8 en base64
-        api_key_id: $APP_STORE_CONNECT_KEY_ID     # <-- Key identifier (p.ej. "THHTNRG4UV")
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID   # <-- Issuer ID
+        ipa_path: build/ios/iphoneos/Runner.ipa
+        api_key: $APP_STORE_CONNECT_API_KEY_BASE64       # proviene de ios-secrets
+        api_key_id: $APP_STORE_CONNECT_KEY_ID      # idem
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID    # idem
         notify_testers: true
         testflight_preview: true
-        release_notes: |
-          • Se corrigieron bugs menores  
-          • Mejoras de rendimiento  
