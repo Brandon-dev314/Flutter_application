@@ -5,7 +5,10 @@ workflows:
     environment:
       flutter: stable
     triggers:
-      - events: [push, pull_request]
+      events:
+        - push
+        - pull_request
+
     scripts:
       - name: Install Flutter dependencies
         script: flutter pub get
@@ -17,11 +20,11 @@ workflows:
           cd ..
 
       - name: Build iOS
-        script: flutter build ios --release 
+        script: flutter build ios --release
 
     artifacts:
       - build/ios/iphoneos/*.ipa
 
     cache:
-      - cache-flutter: true
-      # - cache-pod: true    # ← comenta o elimina esta línea para forzar instalación limpia de pods
+      flutter: true      # cache de Flutter sí
+      cocoapods: false   # cache de CocoaPods desactivado
