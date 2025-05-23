@@ -13,6 +13,9 @@ workflows:
         bundle_identifier: com.example.AppGisela
 
     scripts:
+      - name: Clean previous builds
+        script: flutter clean
+        
       - name: Precache Flutter iOS artifacts
         script: flutter precache --ios
 
@@ -21,9 +24,10 @@ workflows:
 
       - name: Install iOS dependencies
         script: |
-          cd ios
-          pod install --verbose
-          cd ..
+            cd ios
+            rm -rf Pods Podfile.lock
+            pod install --verbose
+            cd ..
 
       - name: Setup code signing on Xcode project
         script: xcode-project use-profiles
