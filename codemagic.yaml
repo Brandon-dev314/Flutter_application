@@ -32,7 +32,6 @@ workflows:
 
     publishing:
       app_store_connect:
-        ipa_path: build/ios/iphoneos/Runner.ipa
         api_key: $APP_STORE_CONNECT_API_KEY_BASE64       # proviene de ios-secrets
         api_key_id: $APP_STORE_CONNECT_KEY_ID      # idem
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID    # idem
