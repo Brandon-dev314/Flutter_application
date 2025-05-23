@@ -33,7 +33,7 @@ workflows:
     publishing:
       app_store_connect:
         api_key: $APP_STORE_CONNECT_API_KEY_BASE64       # proviene de ios-secrets
-        api_key_id: $APP_STORE_CONNECT_KEY_ID     # idem
+        key_id: $APP_STORE_CONNECT_KEY_ID     # idem
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID    # idem
         notify_testers: true
         testflight_preview: true
