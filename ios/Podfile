@@ -6,17 +6,12 @@ project 'Runner', 'Debug' => :debug, 'Profile' => :release, 'Release' => :releas
 
 # Función para obtener FLUTTER_ROOT del Generated.xcconfig
 def flutter_root
-  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
-  unless File.exist?(generated_xcode_build_settings_path)
-    raise "#{generated_xcode_build_settings_path} must exist. Run flutter pub get first"
-  end
-  File.foreach(generated_xcode_build_settings_path) do |line|
-    match = line.match(/FLUTTER_ROOT=(.*)/)
-    return match[1].strip if match
-  end
-  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig then run flutter pub get"
+  # Primero intenta CM_FLUTTER_ROOT (que Codemagic define automáticamente),
+  # luego FLUTTER_ROOT (para tu máquina local), y si no lanza error.
+  ENV['CM_FLUTTER_ROOT'] ||
+    ENV['FLUTTER_ROOT'] ||
+    raise("Neither CM_FLUTTER_ROOT nor FLUTTER_ROOT is set – asegúrate de tener Flutter instalado")
 end
-
 require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root())
 flutter_ios_podfile_setup
 
