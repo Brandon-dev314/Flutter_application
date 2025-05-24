@@ -22,18 +22,10 @@ workflows:
       - name: Flutter pub get
         script: flutter pub get
         
-      - name: Install iOS dependencies
-        script: |
-          cd ios
-          rm -rf Pods Podfile.lock       # limpia Pods y Podfile.lock si existían
-          pod install --repo-update --verbose
-          ls -lha                         # DEBUG: muestra Podfile.lock recién creado
-          cd ..
 
       - name: Build IPA
         script: |
-          flutter build ipa --export-options-plist=ios/ExportOptions.plist --release
-
+          flutter build ipa --export-options-plist=/Users/builder/export_options.plist
     artifacts:
       - build/ios/ipa/*.ipa
 
