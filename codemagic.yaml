@@ -12,19 +12,18 @@ workflows:
         bundle_identifier: com.example.AppGisela
 
     scripts:
+
+      - name: Apply provisioning profiles
+        script: xcode-project use-profiles
+        
+      - name: Flutter pub get
+        script: flutter pub get
+        
       - name: Precache Flutter iOS artifacts
         script: |
           cd ios
           flutter precache --ios
           pod install 
-        
-      - name: Apply provisioning profiles
-        script: xcode-project use-profiles
-          
-
-      - name: Flutter pub get
-        script: flutter pub get
-        
 
       - name: Build IPA
         script: |
