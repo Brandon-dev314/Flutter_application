@@ -1,28 +1,43 @@
-platform :ios, '13.0'
+# Uncommentar para definir plataforma mínima, e.g. iOS 12.0 o superior
+platform :ios, '12.0'
+
+# Deshabilitar estadísticas de CocoaPods para acelerar builds
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
 project 'Runner', 'Debug' => :debug, 'Profile' => :release, 'Release' => :release
 
-# Ruta donde vive este Podfile (carpeta ios)
-flutter_application_path = __dir__
-
-# Obtiene la ruta del SDK de Flutter desde la variable de entorno (Codemagic la provee)
+# Definir ruta del SDK de Flutter
 def flutter_root
-  ENV.fetch('FLUTTER_ROOT')
+  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+  unless File.exist?(generated_xcode_build_settings_path)
+    raise "#{generated_xcode_build_settings_path} debe existir. Ejecuta 'flutter pub get' primero para generarlo."
+  end
+  File.foreach(generated_xcode_build_settings_path) do |line|
+    matches = line.match(/FLUTTER_ROOT\=(.*)/)
+    return matches[1].strip if matches
+  end
+  raise "No se encontró FLUTTER_ROOT en #{generated_xcode_build_settings_path}. Borra Generated.xcconfig y corre flutter pub get."
 end
 
-# Carga el helper oficial de Flutter para CocoaPods
-require File.join(flutter_root, 'packages', 'flutter_tools', 'bin', 'podhelper')
+# Cargar las utilidades de pods de Flutter
+require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
 
-# Configuración inicial de pods de Flutter (rutas de headers, flags, etc.)
+# Configuración inicial de pods de Flutter
 flutter_ios_podfile_setup
 
 target 'Runner' do
-  # Usa frameworks estáticos para los pods (requerido por Firebase y plugins Swift)
+  # Usar frameworks estáticos para pods (requerido por Firebase)
   use_frameworks! :linkage => :static
 
-  # Instala todos los pods de iOS de Flutter y de los plugins listados en pubspec.yaml
-  flutter_install_all_ios_pods(flutter_application_path)
+  # (No usar use_modular_headers! globalmente, no es necesario)
+
+  # Instalar todos los pods de Flutter (incluyendo Firebase via plugins)
+  flutter_install_all_ios_pods(File.dirname(File.realpath(__FILE__)))
+
+  # Si existe un target de tests, podría añadirse así:
+  # target 'RunnerTests' do
+  #   inherit! :search_paths
+  # end
 end
 
 post_install do |installer|
