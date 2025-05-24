@@ -14,6 +14,10 @@ workflows:
     scripts:
       - name: Precache Flutter iOS artifacts
         script: flutter precache --ios
+        
+      - name: Apply provisioning profiles
+        script: xcode-project use-profiles
+          
 
       - name: Flutter pub get
         script: flutter pub get
@@ -24,12 +28,6 @@ workflows:
           rm -rf Pods Podfile.lock       # limpia Pods y Podfile.lock si existían
           pod install --repo-update --verbose
           ls -lha                         # DEBUG: muestra Podfile.lock recién creado
-          cd ..
-
-      - name: Apply provisioning profiles
-        script: |
-          cd ios
-          xcode-project --workspace Runner.xcworkspace use-profiles
           cd ..
 
       - name: Build IPA
