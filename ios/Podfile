@@ -7,10 +7,10 @@ project 'Runner', {
   'Release' => :release,
 }
 
-# Ruta de la app Flutter (directorio padre de ios/)
-flutter_application_path = File.expand_path('..', __dir__)
+# Directorio donde vive este Podfile
+flutter_application_path = __dir__
 
-# Obtiene FLUTTER_ROOT del entorno
+# Obtiene FLUTTER_ROOT del entorno (Codemagic lo provee)
 def flutter_root
   ENV.fetch('FLUTTER_ROOT')
 end
@@ -22,9 +22,11 @@ target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
+  # Instala todos los pods de iOS de Flutter
   flutter_install_all_ios_pods(flutter_application_path)
 end
 
 post_install do |installer|
+  # Ajustes post-instalación de Flutter
   flutter_post_install(installer)
 end
