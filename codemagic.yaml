@@ -22,9 +22,8 @@ workflows:
       - name: Precache Flutter iOS artifacts
         script: |
           cd ios
-          rm -rf Pods Podfile.lock
-          pod repo update
-          pod install --verbose
+          flutter precache --ios
+          pod install 
 
       - name: Build IPA
         script: |
