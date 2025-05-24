@@ -13,7 +13,10 @@ workflows:
 
     scripts:
       - name: Precache Flutter iOS artifacts
-        script: flutter precache --ios
+        script: |
+          cd ios
+          flutter precache --ios
+          pod install 
         
       - name: Apply provisioning profiles
         script: xcode-project use-profiles
