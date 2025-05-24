@@ -1,5 +1,5 @@
 # Uncommentar para definir plataforma mínima, e.g. iOS 12.0 o superior
-platform :ios, '12.0'
+platform :ios, '13.0'
 
 # Deshabilitar estadísticas de CocoaPods para acelerar builds
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
