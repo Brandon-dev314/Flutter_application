@@ -40,12 +40,25 @@ target 'Runner' do
   # end
 end
 
-# Configuraciones posteriores a la instalación de pods
 post_install do |installer|
+  # 1) Apps de Flutter: ajustes post-instalación
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
     target.build_configurations.each do |config|
       config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'NO'
     end
   end
+
+  # 2) Tu proyecto Runner.xcodeproj: parchea también allí
+  runner_proj_path = File.join(__dir__, 'Runner.xcodeproj')
+  runner_proj = Xcodeproj::Project.open(runner_proj_path)
+  runner_proj.targets.each do |tgt|
+    # Aplica a tu target 'Runner'
+    if tgt.name == 'Runner'
+      tgt.build_configurations.each do |config|
+        config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'NO'
+      end
+    end
+  end
+  runner_proj.save
 end
