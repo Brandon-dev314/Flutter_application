@@ -1,53 +1,44 @@
-# Uncommentar para definir plataforma mínima, e.g. iOS 12.0 o superior
 platform :ios, '13.0'
-
-# Deshabilitar estadísticas de CocoaPods para acelerar builds
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
 project 'Runner', 'Debug' => :debug, 'Profile' => :release, 'Release' => :release
 
-# Definir ruta del SDK de Flutter
+# Ruta al directorio ios (donde vive este Podfile)
+flutter_application_path = __dir__
+
+# Obtiene FLUTTER_ROOT leyendo el Generated.xcconfig
 def flutter_root
-  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
-  unless File.exist?(generated_xcode_build_settings_path)
-    raise "#{generated_xcode_build_settings_path} debe existir. Ejecuta 'flutter pub get' primero para generarlo."
+  xcconfig = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __dir__)
+  unless File.exist?(xcconfig)
+    raise "#{xcconfig} no existe. Ejecuta 'flutter pub get' primero."
   end
-  File.foreach(generated_xcode_build_settings_path) do |line|
-    matches = line.match(/FLUTTER_ROOT\=(.*)/)
-    return matches[1].strip if matches
+  File.foreach(xcconfig) do |line|
+    if line =~ /FLUTTER_ROOT\=(.*)/
+      return $1.strip
+    end
   end
-  raise "No se encontró FLUTTER_ROOT en #{generated_xcode_build_settings_path}. Borra Generated.xcconfig y corre flutter pub get."
+  raise "No se encontró FLUTTER_ROOT en #{xcconfig}."
 end
 
-# Cargar las utilidades de pods de Flutter
+# Carga el script de integración de CocoaPods de Flutter
 require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
 
-# Configuración inicial de pods de Flutter
+# Ajustes iniciales de Flutter para iOS (rutas, flags, etc.)
 flutter_ios_podfile_setup
 
 target 'Runner' do
-  # Usar frameworks estáticos para pods (requerido por Firebase)
+  # Usa frameworks estáticos (requerido por Firebase y plugins Swift)
   use_frameworks! :linkage => :static
 
-  # (No usar use_modular_headers! globalmente, no es necesario)
-
-  # Instalar todos los pods de Flutter (incluyendo Firebase via plugins)
-  flutter_install_all_ios_pods(File.dirname(File.realpath(__FILE__)))
-
-  # Si existe un target de tests, podría añadirse así:
-  # target 'RunnerTests' do
-  #   inherit! :search_paths
-  # end
+  # Instala todos los pods de Flutter y tus plugins
+  flutter_install_all_ios_pods(flutter_application_path)
 end
 
 post_install do |installer|
-  # Primero, aplica los ajustes post-instalación de Flutter (bitcode, flags, rutas, etc.)
-  flutter_post_install(installer)
-
-  # Luego, desactiva la generación de interfaces de módulo Swift para evitar
-  # el error "Using bridging headers with module interfaces is unsupported"
+  # Aplica los ajustes de Flutter (equivalente a flutter_post_install)
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
+    # Desactiva la generación de interfaces de módulo Swift
     target.build_configurations.each do |config|
       config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'NO'
     end
