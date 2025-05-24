@@ -2,16 +2,11 @@ workflows:
   ios-workflow:
     name: Build & Publish iOS
     max_build_duration: 60
-
     environment:
       flutter: stable
       xcode: latest
-
-      # Tu grupo con secretos (API Key TestFlight, etc.)
       groups:
         - ios-secret
-
-      # Firma automática usando los archivos que subiste en Code Signing → iOS signing
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.example.AppGisela
@@ -20,29 +15,26 @@ workflows:
       - name: Precache Flutter iOS artifacts
         script: flutter precache --ios
 
-      - name: Install Flutter dependencies
+      - name: Flutter pub get
         script: flutter pub get
-
-      - name: Install CocoaPods dependencies
+        
+      - name: Install iOS dependencies
         script: |
           cd ios
-          rm -rf Pods Podfile.lock
+          rm -rf Pods Podfile.lock       # limpia Pods y Podfile.lock si existían
           pod install --repo-update --verbose
+          ls -lha                         # DEBUG: muestra Podfile.lock recién creado
           cd ..
 
       - name: Apply provisioning profiles
         script: |
           cd ios
-          # Aplica solo al proyecto Runner, no al de Pods:
-          xcode-project use-profiles --project Runner.xcodeproj
+          xcode-project --workspace Runner.xcworkspace use-profiles
           cd ..
 
       - name: Build IPA
         script: |
-          # Este comando genera el .ipa ya firmado
-          flutter build ipa 
-            --export-options-plist=ios/ExportOptions.plist 
-            --release
+          flutter build ipa --export-options-plist=ios/ExportOptions.plist --release
 
     artifacts:
       - build/ios/ipa/*.ipa
