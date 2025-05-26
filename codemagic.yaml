@@ -39,7 +39,4 @@ workflows:
 
         submit_to_testflight: true
 
-        export_compliance_uses_encryption: false
-
-
       
