@@ -91,16 +91,6 @@ flutter_icons:
   ios: true
   image_path: "assets/icon/diseño.png"
 
-flutter_native_splash:
-  color: "#008f79"
-  image: assets/splash/diseño.png
-  android: true
-  ios: true
-  fullscreen: true
-  android_gravity: center
-  ios_content_mode: scaleAspectFit
-
-
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
