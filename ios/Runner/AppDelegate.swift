@@ -1,13 +1,14 @@
-import Flutter
 import UIKit
+import Flutter
+import FirebaseCore
 
-@main
+@UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    GeneratedPluginRegistrant.register(with: self)
+    FirebaseApp.configure() // <- sin esto, Firebase NO se inicializa en iOS
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }
