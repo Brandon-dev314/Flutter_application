@@ -12,12 +12,11 @@ workflows:
         bundle_identifier: com.brandon.fitnessapp
 
     scripts:
-
-      - name: Apply provisioning profiles
-        script: xcode-project use-profiles
-        
       - name: Flutter pub get
         script: flutter pub get
+        
+      - name: Apply provisioning profiles
+        script: xcode-project use-profiles
         
       - name: Precache Flutter iOS artifacts
         script: |
