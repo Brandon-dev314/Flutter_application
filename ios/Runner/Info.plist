@@ -61,14 +61,14 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.429432190208-fq74clqjnlfi2cnocjo3isb1ve056a4c</string>
+				<string>com.googleusercontent.apps.429432190208-d9qp8rfao5o3kj6hl4p0js41519vi1cf</string>
 			</array>
 		</dict>
 	</array>
 
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>com.googleusercontent.apps.429432190208-fq74clqjnlfi2cnocjo3isb1ve056a4c</string>
+		<string>com.googleusercontent.apps.429432190208-d9qp8rfao5o3kj6hl4p0js41519vi1cf</string>
 		<string>com.google.chrome.ios</string>
 		<string>googlechrome</string>
 	</array>
