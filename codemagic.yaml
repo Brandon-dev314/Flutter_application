@@ -9,7 +9,7 @@ workflows:
         - ios-secret
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.brandon.fitnessapp
+        bundle_identifier: com-brandon-rutinapp
 
     scripts:
       
